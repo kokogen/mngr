@@ -1,3 +1,9 @@
+## The only-logic branch
+
+The only-logic branch contans only model and processor that shows the logic of state management processing. 
+The test class contains the connected tests for the logic.
+The entire application is still under construction and is placed at master branch.
+
 ## Micronaut 4.0.0 Documentation
 
 - [User Guide](https://docs.micronaut.io/4.0.0/guide/index.html)
