@@ -22,8 +22,8 @@ public class PartitionVers {
     public static PartitionId modelFromKey(String partId){
         String[] tokens = partId.split("/");
         String entityName = tokens[0];
-        Long dataVersionId = Long.getLong(tokens[1]);
-        Long ets = Long.getLong(tokens[2]);
+        Long dataVersionId = Long.parseLong(tokens[1]);
+        Long ets = Long.parseLong(tokens[2]);
         String addPart = tokens[3];
         if(addPart.equals("null")) addPart = null;
         return new PartitionId(entityName, dataVersionId, ets, addPart);

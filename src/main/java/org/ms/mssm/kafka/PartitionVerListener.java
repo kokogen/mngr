@@ -42,12 +42,11 @@ public class PartitionVerListener {
     }
 
     @Topic("mssm-parts")
-    public List<Task> recieve(PartitionVer partitionVer, Acknowledgement acknowledgement){
+    public void recieve(PartitionVer partitionVer, Acknowledgement acknowledgement){
         StateProcessorResult stateProcessorResult = stateProcessor.process(partitionVer, null);
         stateProcessorResultService.save(stateProcessorResult);
-        acknowledgement.ack();
         stateProcessorResult.tasks().forEach(taskSender::sendTask);
-        return stateProcessorResult.tasks();
+        acknowledgement.ack();
     }
 
 

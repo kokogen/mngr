@@ -25,9 +25,7 @@ public class StateProcessorResultService {
     @Transactional
     public void save(StateProcessorResult stateProcessorResult){
         partitionVerEntityRepository.save(PartitionVers.entity(stateProcessorResult.partitionVer()));
-
         unitOfWorkEntityRepository.updateAll(UnitOfWorks.entities(stateProcessorResult.unitOfWorks()));
-
         taskRepository.saveAll(Tasks.entities(stateProcessorResult.tasks()));
     }
 }
