@@ -10,9 +10,11 @@ import org.ms.mssm.entities.PartitionVerEntity;
 import org.ms.mssm.entities.UnitOfWorkEntity;
 
 import java.util.List;
+import java.util.Set;
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-@Join("partitions")
+//@Join("partitions")
+//@Join("requiredPartitionIds")
 public interface UnitOfWorkEntityRepository extends CrudRepository<UnitOfWorkEntity, Long> {
     @Query(
             value = "delete from public.uow_partition_ver where uow_id = :uowId;",
@@ -37,4 +39,16 @@ public interface UnitOfWorkEntityRepository extends CrudRepository<UnitOfWorkEnt
             , nativeQuery = true
     )
     public void addPartitionIdEntity(Long uowId, String partId);
+
+    @Query(
+            value = "select p.* from public.partition_ver as p join public.uow_partition_ver as pw on pw.part_ver_id = p.part_ver_id and pw.uow_id = :uowId;"
+            , nativeQuery = true
+    )
+    public Set<PartitionVerEntity> getPartitionVerListByUowId(Long uowId);
+
+    @Query(
+            value = "select p.* from public.partition as p join public.uow_required_partition as pw on pw.part_id = p.part_id and pw.uow_id = :uowId;"
+            , nativeQuery = true
+    )
+    public Set<PartitionIdEntity> getPartitionIdListByUowId(Long uowId);
 }

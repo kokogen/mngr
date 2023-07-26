@@ -21,6 +21,7 @@ import org.ms.mssm.repositories.TaskEntityRepository;
 import org.ms.mssm.repositories.UnitOfWorkEntityRepository;
 
 import java.time.*;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -60,6 +61,26 @@ class RepositoryAndServiceTest {
 
             Assertions.assertEquals(uow_in.requiredPartitionIds().size(), uow.partitionIdSet().size());
             Assertions.assertEquals(uow_in.partitions().size(), uow.partitionMap().values().size());
+        }
+    }
+
+    @Test
+    public void test_getPartitionVerListByUowId(){
+        try(ApplicationContext applicationContext = ApplicationContext.run()) {
+            UnitOfWorkService unitOfWorkService  = applicationContext.getBean(UnitOfWorkService.class);
+            UnitOfWorkEntityRepository unitOfWorkEntityRepository = applicationContext.getBean(UnitOfWorkEntityRepository.class);
+            UnitOfWorkEntity uow_in = createUoW();
+
+            unitOfWorkService.save(UnitOfWorks.model(uow_in));
+            UnitOfWork uow = unitOfWorkService.readById(uow_in.uowId());
+
+            System.out.println("1:_-_-_-_-_-_-_");
+            System.out.println(uow);
+
+            Set<PartitionVerEntity> partvers = unitOfWorkEntityRepository.getPartitionVerListByUowId(uow_in.uowId());
+
+            System.out.println("2:_-_-_-_-_-_-_");
+            System.out.println(partvers);
         }
     }
 }

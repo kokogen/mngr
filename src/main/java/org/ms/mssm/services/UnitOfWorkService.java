@@ -2,6 +2,8 @@ package org.ms.mssm.services;
 
 import jakarta.inject.Singleton;
 import org.ms.mssm.converters.UnitOfWorks;
+import org.ms.mssm.entities.PartitionIdEntity;
+import org.ms.mssm.entities.PartitionVerEntity;
 import org.ms.mssm.entities.UnitOfWorkEntity;
 import org.ms.mssm.logic.model.UnitOfWork;
 import org.ms.mssm.repositories.PartitionIdEntityRepository;
@@ -15,7 +17,6 @@ import java.util.Set;
 public class UnitOfWorkService {
     private final UnitOfWorkEntityRepository unitOfWorkEntityRepository;
     private final PartitionVerEntityRepository partitionVerEntityRepository;
-
     private final PartitionIdEntityRepository partitionIdEntityRepository;
 
     public UnitOfWorkService(UnitOfWorkEntityRepository unitOfWorkEntityRepository, PartitionVerEntityRepository partitionVerEntityRepository, PartitionIdEntityRepository partitionIdEntityRepository) {
@@ -29,7 +30,12 @@ public class UnitOfWorkService {
     }
 
     public UnitOfWork readById(Long uowId){
-        return UnitOfWorks.model(unitOfWorkEntityRepository.findById(uowId).get());
+        UnitOfWorkEntity uowe = unitOfWorkEntityRepository.findById(uowId).get();
+        Set<PartitionVerEntity> partitionVerEntities = unitOfWorkEntityRepository.getPartitionVerListByUowId(uowId);
+        Set<PartitionIdEntity> partitionIdEntities = unitOfWorkEntityRepository.getPartitionIdListByUowId(uowId);
+
+        UnitOfWorkEntity uowe2 = new UnitOfWorkEntity(uowId, uowe.dagId(), uowe.actualEventTimeSlot(), partitionVerEntities, partitionIdEntities, uowe.depth());
+        return UnitOfWorks.model(uowe2);
     }
 
     public void save(UnitOfWork unitOfWork){
