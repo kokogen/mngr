@@ -1,6 +1,7 @@
 package org.ms.mssm.entities;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
@@ -20,5 +21,6 @@ public record PartitionIdEntity (
         @NonNull
         Long ets,
         @MappedProperty("add_part_key")
+        @Nullable
         String additionalPartKey
 ){}

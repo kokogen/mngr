@@ -21,14 +21,20 @@ public interface UnitOfWorkEntityRepository extends CrudRepository<UnitOfWorkEnt
     public void deletePartitionVerSetByUowId(Long uowId);
 
     @Query(
+            value = "delete from public.uow_required_partition where uow_id = :uowId;",
+            nativeQuery = true
+    )
+    public void deletePartitionIdSetByUowId(Long uowId);
+
+    @Query(
             value = "insert into public.uow_partition_ver(uow_id, part_ver_id) values(:uowId, :partVerId);"
             , nativeQuery = true
     )
     public void addPartitionVerEntity(Long uowId, String partVerId);
 
     @Query(
-            value = "delete from public.uow_partition_ver where uow_id = :uowId and part_ver_id = :partVerId;"
+            value = "insert into public.uow_required_partition(uow_id, part_id) values(:uowId, :partId);"
             , nativeQuery = true
     )
-    public void deletePartitionVerEntity(Long uowId, String partVerId);
+    public void addPartitionIdEntity(Long uowId, String partId);
 }

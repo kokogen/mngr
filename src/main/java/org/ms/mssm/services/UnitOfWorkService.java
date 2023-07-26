@@ -3,20 +3,25 @@ package org.ms.mssm.services;
 import jakarta.inject.Singleton;
 import org.ms.mssm.converters.UnitOfWorks;
 import org.ms.mssm.entities.UnitOfWorkEntity;
-import org.ms.mssm.logic.model.PartitionVer;
 import org.ms.mssm.logic.model.UnitOfWork;
+import org.ms.mssm.repositories.PartitionIdEntityRepository;
+import org.ms.mssm.repositories.PartitionVerEntityRepository;
 import org.ms.mssm.repositories.UnitOfWorkEntityRepository;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Singleton
 public class UnitOfWorkService {
     private final UnitOfWorkEntityRepository unitOfWorkEntityRepository;
+    private final PartitionVerEntityRepository partitionVerEntityRepository;
 
-    public UnitOfWorkService(UnitOfWorkEntityRepository unitOfWorkEntityRepository) {
+    private final PartitionIdEntityRepository partitionIdEntityRepository;
+
+    public UnitOfWorkService(UnitOfWorkEntityRepository unitOfWorkEntityRepository, PartitionVerEntityRepository partitionVerEntityRepository, PartitionIdEntityRepository partitionIdEntityRepository) {
         this.unitOfWorkEntityRepository = unitOfWorkEntityRepository;
+        this.partitionVerEntityRepository = partitionVerEntityRepository;
+        this.partitionIdEntityRepository = partitionIdEntityRepository;
     }
 
     public Set<UnitOfWork> readAll(){
@@ -31,13 +36,24 @@ public class UnitOfWorkService {
 
         UnitOfWorkEntity uowe = UnitOfWorks.entity(unitOfWork);
 
-        if(unitOfWorkEntityRepository.existsById(unitOfWork.uowId())) {
-            unitOfWorkEntityRepository.update(uowe);
-            unitOfWorkEntityRepository.deletePartitionVerSetByUowId(unitOfWork.uowId());
-        } else
-            unitOfWorkEntityRepository.save(uowe);
+        uowe.partitions().forEach(p -> {
+            if(!partitionVerEntityRepository.existsById(p.partVerId())) partitionVerEntityRepository.save(p);
+        });
 
-        unitOfWork.partitionMap().values().forEach(pv -> unitOfWorkEntityRepository.addPartitionVerEntity(unitOfWork.uowId(), pv.partVerId()));
+        uowe.requiredPartitionIds().forEach(p -> {
+            if(!partitionIdEntityRepository.existsById(p.partId())) partitionIdEntityRepository.save(p);
+        });
+
+        if(unitOfWorkEntityRepository.existsById(uowe.uowId())) {
+            unitOfWorkEntityRepository.update(uowe);
+            unitOfWorkEntityRepository.deletePartitionVerSetByUowId(uowe.uowId());
+            unitOfWorkEntityRepository.deletePartitionIdSetByUowId(uowe.uowId());
+        } else {
+            unitOfWorkEntityRepository.save(uowe);
+        }
+
+        uowe.requiredPartitionIds().forEach(p -> unitOfWorkEntityRepository.addPartitionIdEntity(uowe.uowId(), p.partId()));
+        uowe.partitions().forEach(pv -> unitOfWorkEntityRepository.addPartitionVerEntity(uowe.uowId(), pv.partVerId()));
     }
 
 }

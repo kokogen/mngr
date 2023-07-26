@@ -58,7 +58,8 @@ class RepositoryAndServiceTest {
             unitOfWorkService.save(UnitOfWorks.model(uow_in));
             UnitOfWork uow = unitOfWorkService.readById(uow_in.uowId());
 
-            Assertions.assertEquals(uow_in.partitions().size(), uow.partitionIdSet().size());
+            Assertions.assertEquals(uow_in.requiredPartitionIds().size(), uow.partitionIdSet().size());
+            Assertions.assertEquals(uow_in.partitions().size(), uow.partitionMap().values().size());
         }
     }
 }
