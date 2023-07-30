@@ -1,7 +1,6 @@
 package org.ms.mssm.kafka;
 
 import io.micronaut.configuration.kafka.annotation.KafkaClient;
-import io.micronaut.configuration.kafka.annotation.KafkaKey;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import org.ms.mssm.logic.model.Task;
 
@@ -10,5 +9,5 @@ import org.ms.mssm.logic.model.Task;
 )
 public interface TaskSender {
     @Topic("mssm-tasks")
-    void sendTask(Task task);
+    void send(Task task);
 }

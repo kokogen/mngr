@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-//@Join("partitions")
-//@Join("requiredPartitionIds")
 public interface UnitOfWorkEntityRepository extends CrudRepository<UnitOfWorkEntity, Long> {
     @Query(
             value = "delete from public.uow_partition_ver where uow_id = :uowId;",

@@ -74,13 +74,10 @@ class RepositoryAndServiceTest {
             unitOfWorkService.save(UnitOfWorks.model(uow_in));
             UnitOfWork uow = unitOfWorkService.readById(uow_in.uowId());
 
-            System.out.println("1:_-_-_-_-_-_-_");
-            System.out.println(uow);
-
             Set<PartitionVerEntity> partvers = unitOfWorkEntityRepository.getPartitionVerListByUowId(uow_in.uowId());
 
-            System.out.println("2:_-_-_-_-_-_-_");
-            System.out.println(partvers);
+            Assertions.assertEquals(uow_in.partitions().size(), partvers.size());
+            partvers.forEach(p -> Assertions.assertTrue(uow_in.partitions().contains(p)));
         }
     }
 }

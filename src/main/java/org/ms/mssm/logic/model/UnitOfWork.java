@@ -1,10 +1,13 @@
 package org.ms.mssm.logic.model;
 
+import io.micronaut.serde.annotation.Serdeable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@Serdeable
 public record UnitOfWork(
         Long uowId,
         Long dagId,

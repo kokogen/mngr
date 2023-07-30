@@ -27,12 +27,6 @@ public record UnitOfWorkEntity (
                 name = "uow_partition_ver",
                 joinColumns = @JoinColumn(name = "uow_id", referencedColumnName = "uow_id"),
                 inverseJoinColumns = @JoinColumn(name = "part_ver_id", referencedColumnName = "part_ver_id")
-                        /*{
-                        @JoinColumn(name = "entity", referencedColumnName = "entity"),
-                        @JoinColumn(name = "dataversion_id", referencedColumnName = "dataversion_id"),
-                        @JoinColumn(name = "ets", referencedColumnName = "ets"),
-                        @JoinColumn(name = "add_part_key", referencedColumnName = "add_part_key")
-                }*/
         )
         Set<PartitionVerEntity> partitions,
         @Relation(Relation.Kind.MANY_TO_MANY)
@@ -40,12 +34,6 @@ public record UnitOfWorkEntity (
                 name = "uow_required_partition",
                 joinColumns = @JoinColumn(name = "uow_id", referencedColumnName = "uow_id"),
                 inverseJoinColumns = @JoinColumn(name = "part_id", referencedColumnName = "part_id")
-                        /*{
-                        @JoinColumn(name = "entity", referencedColumnName = "entity"),
-                        @JoinColumn(name = "dataversion_id", referencedColumnName = "dataversion_id"),
-                        @JoinColumn(name = "ets", referencedColumnName = "ets"),
-                        @JoinColumn(name = "add_part_key", referencedColumnName = "add_part_key")
-                }*/
         )
         Set<PartitionIdEntity> requiredPartitionIds,
         @NonNull

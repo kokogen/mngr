@@ -1,7 +1,10 @@
 package org.ms.mssm.logic.model;
 
+import io.micronaut.serde.annotation.Serdeable;
+
 import java.util.Objects;
 
+@Serdeable
 public record PartitionVer(
         PartitionId partitionId,
         Long ver,

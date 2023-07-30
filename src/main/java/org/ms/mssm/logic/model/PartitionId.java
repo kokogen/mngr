@@ -1,5 +1,8 @@
 package org.ms.mssm.logic.model;
 
+import io.micronaut.serde.annotation.Serdeable;
+
+@Serdeable
 public record PartitionId(
     String entityName,
     Long dataVersionId,
